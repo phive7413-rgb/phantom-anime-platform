@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>phantom — Anime Hub</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#04040a;
+      --panel:#0b0b12;
+      --neon1:#00e6ff;
+      --neon2:#9b59ff;
+      --accent:#d4af37; /* gold if you want some accents */
+      --muted: rgba(255,255,255,0.65);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,var(--bg) 0%, #050515 60%);
+      color: #eaf6ff;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    header{
+      padding:18px 28px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+    .brand{
+      display:flex;align-items:center;gap:14px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:8px;
+      background:linear-gradient(135deg,var(--neon2),var(--neon1));
+      box-shadow:0 6px 30px rgba(155,89,255,0.12), 0 2px 8px rgba(0,230,255,0.06);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;color:#02040a;
+      letter-spacing:0.8px;
+    }
+    .title{
+      font-weight:700;font-size:18px;color:var(--neon1);
+    }
+    .subtitle{font-size:13px;color:var(--muted);margin-top:2px}
+
+    main{padding:28px;max-width:1100px;margin:0 auto;}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:20px;margin-top:28px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(155,89,255,0.07);
+      padding:18px;border-radius:12px;
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover{ transform: translateY(-8px); box-shadow: 0 18px 34px rgba(0,0,0,0.55); }
+
+    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px}
+    .card h3{margin:0;font-size:18px;color:var(--neon2)}
+    .card p{margin:8px 0 0;color:var(--muted);font-size:14px}
+    .card a{
+      display:inline-block;margin-top:12px;padding:8px 14px;border-radius:8px;text-decoration:none;
+      background:linear-gradient(90deg,var(--neon1),var(--neon2));color:#02040a;font-weight:600;
+      box-shadow:0 6px 18px rgba(155,89,255,0.12);
+    }
+
+    .searchbar{
+      display:flex;gap:12px;align-items:center;
+      margin-top:18px;background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .searchbar input[type="search"]{
+      background:transparent;border:0;outline:0;color:inherit;font-size:15px;width:100%;
+    }
+    .searchbar .small{font-size:13px;color:var(--muted);}
+
+    footer{padding:32px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:600px){
+      .card img{height:140px}
+      .title{font-size:16px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">ph</div>
+      <div>
+        <div class="title">phantom • Anime Hub</div>
+        <div class="subtitle">Explore characters — fast search & futuristic style</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;align-items:center">
+      <a href="index.html" style="text-decoration:none;color:var(--neon1);font-weight:600">Home</a>
+      <a href="anime.html" style="text-decoration:none;color:var(--muted)">Browse</a>
+    </div>
+  </header>
+
+  <main>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap">
+      <div>
+        <h1 style="margin:0;color:var(--neon2)">Browse Featured Anime</h1>
+        <div style="color:var(--muted);margin-top:6px">Click any anime to see all characters</div>
+      </div>
+
+      <div style="min-width:220px">
+        <!-- small search that navigates to anime page if matches -->
+        <div class="searchbar" id="indexSearch">
+          <input id="quickSearch" type="search" placeholder="Search anime or character (press Enter)"/>
+          <div class="small">Press Enter</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="animeGrid" class="grid" aria-live="polite">
+      <!-- Anime cards injected by JS -->
+    </div>
+
+  </main>
+
+  <footer>
+    © 2025 phantomHIVE — A futuristic anime character directory
+  </footer>
+
+  <script>
+    // minimal client-only loader — reads data/anime.json
+    async function loadIndex(){
+      try{
+        const r = await fetch('data/anime.json');
+        const json = await r.json();
+        const grid = document.getElementById('animeGrid');
+        grid.innerHTML = '';
+        json.anime.forEach(a=>{
+          const card = document.createElement('div'); card.className='card';
+          card.innerHTML = `
+            <img src="${a.cover || 'assets/img/placeholder-anime.jpg'}" alt="${a.name}">
+            <h3>${a.name}</h3>
+            <p>${a.description || ''}</p>
+            <a href="anime.html?anime=${encodeURIComponent(a.slug)}">View characters</a>
+          `;
+          grid.appendChild(card);
+        });
+
+        // quick search
+        document.getElementById('indexSearch').addEventListener('submit', e=>e.preventDefault());
+        document.getElementById('quickSearch').addEventListener('keydown', e=>{
+          if(e.key === 'Enter'){
+            const q = e.target.value.trim().toLowerCase();
+            if(!q) return;
+            // try find anime with name or slug
+            const found = json.anime.find(x => x.name.toLowerCase().includes(q) || x.slug.toLowerCase()===q);
+            if(found) location.href = 'anime.html?anime=' + encodeURIComponent(found.slug);
+            else {
+              // fallback: go to anime.html and pass search param
+              location.href = 'anime.html?search=' + encodeURIComponent(q);
+            }
+          }
+        });
+      }catch(err){
+        document.getElementById('animeGrid').innerHTML = '<div style="color:#f77">Failed to load anime list. Make sure data/anime.json exists.</div>';
+        console.error(err);
+      }
+    }
+    loadIndex();
+  </script>
+</body>
+  </html>
