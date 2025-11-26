@@ -1,0 +1,47 @@
+{
+  "anime": [
+    {
+      "slug": "naruto",
+      "name": "Naruto",
+      "description": "Shinobi adventures of Uzumaki Naruto and friends.",
+      "cover": "assets/img/naruto-cover.jpg",
+      "tags": ["Shounen","Action"],
+      "characters": [
+        {
+          "name": "Naruto Uzumaki",
+          "role": "Protagonist",
+          "categories": ["Main","Ninja","Hero"],
+          "image": "assets/img/naruto-naruto.jpg",
+          "description": "The spirited ninja aiming to become Hokage."
+        },
+        {
+          "name": "Sasuke Uchiha",
+          "role": "Rival",
+          "categories": ["Main","Ninja"],
+          "image": "assets/img/naruto-sasuke.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "onepiece",
+      "name": "One Piece",
+      "description": "The Straw Hat pirates in search of the legendary treasure.",
+      "cover": "assets/img/onepiece-cover.jpg",
+      "tags": ["Adventure","Pirates"],
+      "characters": [
+        {
+          "name": "Monkey D. Luffy",
+          "role": "Protagonist",
+          "categories": ["Main","Captain"],
+          "image": "assets/img/onepiece-luffy.jpg"
+        },
+        {
+          "name": "Roronoa Zoro",
+          "role": "Swordsman",
+          "categories": ["Main","Crew"],
+          "image": "assets/img/onepiece-zoro.jpg"
+        }
+      ]
+    }
+  ]
+}
